@@ -1,0 +1,64 @@
+<title>Shared Todo App </title>
+
+
+ <% if !flash[:error].nil? %>
+ <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert" >×</button>
+    <strong><%= flash[:error] %></strong>
+    </div>
+  <% end %>
+
+ <% if !flash[:success].nil? %>
+ <div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert" >×</button>
+    <strong><%= flash[:success] %></strong>
+    </div>
+  <% end %> 
+
+<div class="container">
+  <div class="row">
+    <div class="span4">
+      <h1>Shared Todo App</h1>
+      <hr>
+        <p>All your todos here</p>
+       <%= form_for @new_todo, :url => { :action => "add" }  do |f|  %>
+          <%= f.text_field  :todo_item %>
+            <%= f.submit "Agregar", class: "btn btn-primary"  %>
+        <%end%>
+
+      <p>All your todos here</p>
+      <div class="well">
+        <%= form_tag("/todos/complete/", :method => "post") do %>
+          <% if(@todo_items != nil) %> 
+            <ul style="list-style-type:none;">
+
+
+              <% @todo_items.each do |t| %> 
+                <% if t.completed == true %>
+                  <li style="color:grey;"> <%= check_box_tag  "todos_checkbox[]",t.id %>  <strike><%= t.todo_item %>
+                  <% if !t.deadLine.nil?%>
+                    <%= time_tag t.deadLine %>
+                  <% end %>
+                  </strike> </li>
+                  <% else %>
+                    <li> <%= check_box_tag  "todos_checkbox[]",t.id %> <%= t.todo_item %>
+                    <% if !t.deadLine.nil?%>
+                      <%= time_tag t.deadLine %>
+                    <% end %>  </li>
+                <% end %>
+            </ul>
+              <% end %>
+          <%= submit_tag( "Borrar", :class=>"btn btn-danger", data: {confirm: "¿Desea eliminar?"}) %>
+
+          <%= submit_tag("Llene los requerimientos", :class=>"btn btn-success") %>
+
+
+          <% else %>
+            <p>Ninguna asignación hasta el momento</p>
+          <% end %>
+        <% end %>
+
+      </div> <!-- well -->
+    </div> <!-- span4 -->
+  </div> <!-- row -->
+</div> <!-- container -->
